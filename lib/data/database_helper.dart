@@ -1,52 +1,84 @@
-import 'package:esports_league/data/dummy_data.dart';
+import 'package:esports_league/model/Championship.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+
+import 'package:esports_league/model/Championship.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper instance = DatabaseHelper.namedConstructor();
-  static Database? _database;
+  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+  late Database _database;
 
-  DatabaseHelper.namedConstructor();
+  DatabaseHelper._privateConstructor() {
+    _initDatabase();
+  }
 
   Future<Database> get database async {
     if (_database != null) {
-      return _database!;
+      return _database;
     }
 
     _database = await _initDatabase();
-    return _database!;
+    return _database;
   }
 
   Future<Database> _initDatabase() async {
-    final String databasesPath = await getDatabasesPath();
-    final String path = join(databasesPath, 'campeonatos.db');
-
-    return await openDatabase(path, version: 1, onCreate: _createDb);
+    String databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'esports_league.db');
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _createDatabase,
+    );
   }
 
-  Future<void> _createDb(Database db, int version) async {
+  Future<void> _createDatabase(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE campeonatos (
+      CREATE TABLE IF NOT EXISTS championships (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        quantidadeJogadores INTEGER,
-        times TEXT
+        name TEXT,
+        date TEXT,
+        teams TEXT
       )
     ''');
   }
 
-  Future<int> createCampeonato(
-      int quantidadeJogadores, String? liga, String? times) async {
-    final db = await instance.database;
-    final campeonato = {
-      'quantidadeJogadores': quantidadeJogadores,
-      'liga': liga,
-      'times': times,
+  Future<int> createChampionship(
+      String name, String date, List<String> teams) async {
+    Database db = await instance.database;
+    Map<String, dynamic> row = {
+      'name': name,
+      'date': date,
+      'teams': teams
+          .join(','), // Convert the list of teams to a comma-separated string
     };
-    return await db.insert('campeonatos', campeonato);
+    return await db.insert('championships', row);
   }
 
-  Future<List<Map<String, dynamic>>> getCampeonatos() async {
-    final db = await instance.database;
-    return await db.query('campeonatos');
+  Future<List<Championship>> readChampionships() async {
+    Database db = await instance.database;
+    List<Map<String, dynamic>> results = await db.query('championships');
+    return results.map((row) => Championship.fromJson(row)).toList();
+  }
+
+  Future<int> updateChampionship(Championship championship) async {
+    Database db = await instance.database;
+    Map<String, dynamic> row = championship.toJson();
+    return await db.update(
+      'championships',
+      row,
+      where: 'id = ?',
+      whereArgs: [championship.id],
+    );
+  }
+
+  Future<int> deleteChampionship(int id) async {
+    Database db = await instance.database;
+    return await db.delete(
+      'championships',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 }
