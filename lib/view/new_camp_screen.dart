@@ -26,6 +26,7 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
   List<int> quantidadeJogadoresOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   int selectedQuantidadeJogadores = 2;
   List<Team> selectedTeams = [];
+  List<TextEditingController> playerControllers = [];
 
   Future<List<String>> getAssetImages(String directory) async {
     final appDir = await getApplicationDocumentsDirectory();
@@ -45,13 +46,13 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Erro'),
+          title: const Text('Erro'),
           content: Text(
-              'Limite máximo de ${selectedQuantidadeJogadores} times atingido.'),
+              'Limite máximo de $selectedQuantidadeJogadores times atingido.'),
           actions: [
-            FlatButton(
+            TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         ),
@@ -61,37 +62,42 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Adicionar time'),
+            title: const Text('Adicionar time'),
             content: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Selecione a liga:'),
+                    const Text('Selecione a liga:'),
                     DropdownButton<League>(
                       value: selectedLeague,
-                      items: leagues.map((league) {
-                        return DropdownMenuItem<League>(
-                          value: league,
-                          child: Row(
-                            children: [
-                              Image.asset('assets/images/${league.logo}'),
-                              SizedBox(width: 10),
-                              Text(league.name),
-                            ],
-                          ),
-                        );
-                      }).toList(),
                       onChanged: (value) {
                         setState(() {
                           selectedLeague = value!;
                           selectedTeam = null;
                         });
                       },
+                      items: leagues.map((league) {
+                        return DropdownMenuItem<League>(
+                          value: league,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Image.asset('assets/images/${league.logo}'),
+                                const SizedBox(width: 10),
+                                Text(league.name),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      isExpanded: true,
                     ),
-                    SizedBox(height: 10),
-                    Text('Selecione o time:'),
+                    const SizedBox(height: 10),
+                    const Text('Selecione o time:'),
                     DropdownButton<Team>(
                       value: selectedTeam,
                       onChanged: (value) {
@@ -104,22 +110,26 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                           .map((team) {
                         return DropdownMenuItem<Team>(
                           value: team,
-                          child: Row(
-                            children: [
-                              Image.asset('assets/images/${team.logo}'),
-                              SizedBox(width: 10),
-                              Text(team.name),
-                            ],
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Image.asset('assets/images/${team.logo}'),
+                                const SizedBox(width: 10),
+                                Text(team.name),
+                              ],
+                            ),
                           ),
                         );
                       }).toList(),
+                      isExpanded: true,
                     ),
                   ],
                 );
               },
             ),
             actions: [
-              FlatButton(
+              TextButton(
                 onPressed: () {
                   if (selectedTeam != null) {
                     // Verifica se o time já existe na lista
@@ -128,13 +138,13 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text('Erro'),
-                          content: Text(
+                          title: const Text('Erro'),
+                          content: const Text(
                               'Esse time já está na lista. Selecione outro!'),
                           actions: [
-                            FlatButton(
+                            TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: Text('OK'),
+                              child: const Text('OK'),
                             ),
                           ],
                         ),
@@ -145,13 +155,13 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: Text('Erro'),
+                            title: const Text('Erro'),
                             content: Text(
-                                'Limite máximo de ${selectedQuantidadeJogadores} times atingido.'),
+                                'Limite máximo de $selectedQuantidadeJogadores times atingido.'),
                             actions: [
-                              FlatButton(
+                              TextButton(
                                 onPressed: () => Navigator.pop(context),
-                                child: Text('OK'),
+                                child: const Text('OK'),
                               ),
                             ],
                           ),
@@ -167,7 +177,7 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                     }
                   }
                 },
-                child: Text('Adicionar'),
+                child: const Text('Adicionar'),
               ),
             ],
           );
@@ -176,10 +186,17 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
     }
   }
 
+  void initializePlayerControllers(int quantidadeJogadores) {
+    playerControllers.clear();
+    for (int i = 0; i < quantidadeJogadores; i++) {
+      playerControllers.add(TextEditingController());
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    selectedLeague;
+    initializePlayerControllers(selectedQuantidadeJogadores);
   }
 
   @override
@@ -205,10 +222,25 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                 onChanged: (int? newValue) {
                   setState(() {
                     selectedQuantidadeJogadores = newValue!;
+                    initializePlayerControllers(selectedQuantidadeJogadores);
                   });
                 },
                 decoration: InputDecoration(
                   labelText: 'Quantidade de Jogadores',
+                ),
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: selectedQuantidadeJogadores,
+                  itemBuilder: (context, index) {
+                    return TextFormField(
+                      controller: playerControllers[index],
+                      decoration: InputDecoration(
+                        labelText: 'Nome do Jogador ${index + 1}',
+                      ),
+                    );
+                  },
                 ),
               ),
               SizedBox(height: 20),
@@ -221,6 +253,14 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                       child: ListTile(
                         leading: Image.asset('assets/images/${team.logo}'),
                         title: Text(team.name),
+                        trailing: IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            setState(() {
+                              selectedTeams.remove(team);
+                            });
+                          },
+                        ),
                       ),
                     );
                   },
@@ -228,7 +268,7 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
               ),
               SizedBox(height: 20),
               Center(
-                child: RaisedButton(
+                child: ElevatedButton(
                   onPressed: () {
                     _showAddTeamDialog();
                   },
@@ -236,7 +276,7 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                 ),
               ),
               SizedBox(height: 16),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () {
                   if (selectedLeague != null &&
                       selectedQuantidadeJogadores > 0) {
@@ -244,8 +284,8 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                       String timesWord =
                           selectedQuantidadeJogadores - selectedTeams.length ==
                                   1
-                              ? 'time'
-                              : 'times';
+                              ? 'time.'
+                              : 'times.';
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -253,7 +293,7 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                           content: Text(
                               'Adicione mais ${selectedQuantidadeJogadores - selectedTeams.length} ${timesWord}'),
                           actions: [
-                            FlatButton(
+                            ElevatedButton(
                               onPressed: () => Navigator.pop(context),
                               child: Text('OK'),
                             ),
@@ -262,7 +302,6 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                       );
                     } else {
                       // Realize as ações necessárias
-
                       // Criar o campeonato utilizando os valores selecionados
                       /*databaseHelper.createCampeonato(
                           selectedQuantidadeJogadores,
@@ -278,7 +317,7 @@ class _NewCampeonatoScreenState extends State<NewCampeonatoScreen> {
                         title: Text('Erro'),
                         content: Text('Preencha todos os campos corretamente.'),
                         actions: [
-                          FlatButton(
+                          ElevatedButton(
                             onPressed: () => Navigator.pop(context),
                             child: Text('OK'),
                           ),

@@ -1,94 +1,76 @@
 import 'package:esports_league/components/drawer.dart';
 import 'package:esports_league/data/database_helper.dart';
 import 'package:esports_league/data/dummy_data.dart';
-import 'package:esports_league/model/Championship.dart';
 import 'package:esports_league/view/new_camp_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:esports_league/model/Championship.dart';
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
-
   @override
-  State<Home> createState() => _HomeState();
+  _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   late DatabaseHelper databaseHelper;
-  List<Championship> championships = [];
 
   @override
   void initState() {
     super.initState();
     databaseHelper = DatabaseHelper.instance;
+    insertFakeChampionship();
   }
 
-  Future<List<Championship>>? getChampionshipsFromDatabase() async {
-    final Database db = await databaseHelper.database;
-
-    final List<Map<String, dynamic>> maps = await db.query('championships');
-
-    if (maps.isEmpty) {
-      return null!; // Retorna null caso não haja campeonatos no banco de dados
-    }
-
-    return List<Championship>.from(
-      maps.map((championship) => Championship.fromJson(championship)),
-    );
+  Future<void> insertFakeChampionship() async {
+    List<String> teams = ['Team A', 'Team B', 'Team C'];
+    List<String> players = ['Nicollas', 'Isaac', 'Kawe'];
+    await databaseHelper.createChampionship(
+        'Fake Championship', '2023-06-30', teams, players);
+    setState(() {}); // Refresh the UI after inserting the fake championship
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Esports League"),
+        title: const Text('Esports League'),
       ),
       drawer: const AppDrawer(),
       body: FutureBuilder<List<Championship>>(
-        future: getChampionshipsFromDatabase(),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<Championship>> snapshot) {
+        future: databaseHelper.readChampionships(),
+        builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            print(snapshot.error);
-            return Column(
-              children: [
-                Text("AQUI ERRO"),
-                Text('Error: ${snapshot.error}'),
-              ],
+            return const Center(
+              child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasData) {
-            final List<Championship> championships = snapshot.data!;
+            List<Championship> championships = snapshot.data!;
             if (championships.isEmpty) {
-              // Exibir a imagem quando não houver campeonatos
-              return Column(
-                children: [
-                  Text('Sem campeonatos cadastrados!'),
-                  Image.asset('assets/images/no_data_image.png'),
-                ],
+              // No championships in the database, show the home image
+              return Center(
+                child: Image.asset('assets/images/home_image.png'),
               );
             } else {
-              // Exibir o widget com a lista de campeonatos
+              // Show the list of championships
               return ListView.builder(
                 itemCount: championships.length,
                 itemBuilder: (context, index) {
-                  final Championship championship = championships[index];
-                  return ListTile(
-                    title: Text(championship.name),
-                    subtitle: Text(championship.date.toString()),
-                    // Resto do código para exibir as informações do campeonato
+                  Championship championship = championships[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(championship.name),
+                      subtitle: Text(championship.date),
+                      trailing: const Icon(Icons.arrow_forward),
+                      onTap: () {
+                        // Handle tap on the championship to show more information
+                      },
+                    ),
                   );
                 },
               );
             }
           } else {
-            // Caso não haja dados e também não ocorra erro, exibir uma mensagem de "Nenhum dado encontrado"
-            return Column(
-              children: [
-                Text('Sem campeonatos cadastrados!'),
-                Image.asset('assets/images/no_data_image.png'),
-              ],
+            return const Center(
+              child: Text('Error loading championships'),
             );
           }
         },
@@ -105,7 +87,7 @@ class _HomeState extends State<Home> {
             ),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }

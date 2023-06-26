@@ -50,3 +50,6 @@ ios/
 web/
 android/
 windows/
+
+# vscode related
+.vscode/

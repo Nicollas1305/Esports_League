@@ -2,17 +2,11 @@ import 'package:esports_league/model/Championship.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import 'package:esports_league/model/Championship.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
-
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   late Database _database;
 
-  DatabaseHelper._privateConstructor() {
-    _initDatabase();
-  }
+  DatabaseHelper._privateConstructor();
 
   Future<Database> get database async {
     if (_database != null) {
@@ -42,28 +36,47 @@ class DatabaseHelper {
         teams TEXT
       )
     ''');
+
+    // Imprimir informações sobre o banco de dados
+    List<Map<String, dynamic>> tables =
+        await db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'");
+    print("Lista de tabelas no banco de dados:");
+    tables.forEach((table) {
+      print(table['name']);
+    });
+    print(getDatabasesPath());
   }
 
-  Future<int> createChampionship(
-      String name, String date, List<String> teams) async {
-    Database db = await instance.database;
-    Map<String, dynamic> row = {
-      'name': name,
-      'date': date,
-      'teams': teams
-          .join(','), // Convert the list of teams to a comma-separated string
-    };
-    return await db.insert('championships', row);
+  Future<int> createChampionship(String name, String date, List<String> teams,
+      List<String> players) async {
+    Database? db = await instance.database;
+    if (db != null) {
+      Map<String, dynamic> row = {
+        'name': name,
+        'date': date,
+        'teams': teams.join(','),
+        'players': players.join(','),
+      };
+      return await db.insert('championships', row);
+    } else {
+      throw Exception("Database is null");
+    }
   }
 
   Future<List<Championship>> readChampionships() async {
-    Database db = await instance.database;
+    Database? db = await instance.database;
+    if (db == null) {
+      throw Exception('Database is not initialized');
+    }
     List<Map<String, dynamic>> results = await db.query('championships');
     return results.map((row) => Championship.fromJson(row)).toList();
   }
 
   Future<int> updateChampionship(Championship championship) async {
-    Database db = await instance.database;
+    Database? db = await instance.database;
+    if (db == null) {
+      throw Exception('Database is not initialized');
+    }
     Map<String, dynamic> row = championship.toJson();
     return await db.update(
       'championships',
@@ -74,7 +87,10 @@ class DatabaseHelper {
   }
 
   Future<int> deleteChampionship(int id) async {
-    Database db = await instance.database;
+    Database? db = await instance.database;
+    if (db == null) {
+      throw Exception('Database is not initialized');
+    }
     return await db.delete(
       'championships',
       where: 'id = ?',
