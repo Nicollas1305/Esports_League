@@ -7,9 +7,8 @@ List<League> leagues = [
   League(id: 3, name: 'Premier League', logo: 'premier_league.png'),
   League(id: 4, name: 'Bundesliga', logo: 'bundesliga.png'),
   League(id: 5, name: 'Seleções', logo: 'seleçoes.png'),
-
-  League(id: 4, name: 'A League', logo: 'a_League.png'),
-  League(id: 5, name: 'Eredivisie', logo: 'eredivisie.png'),
+  League(id: 6, name: 'A League', logo: 'a_League.png'),
+  League(id: 7, name: 'Eredivisie', logo: 'eredivisie.png'),
 ];
 
 List<Team> dummyTeams = [
@@ -50,9 +49,6 @@ List<Team> dummyTeams = [
   Team(id: 13, name: 'Santos', logo: 'santos.png', leagueId: 2),
   Team(id: 24, name: 'São Paulo', logo: 'sao_paulo.png', leagueId: 2),
   Team(id: 25, name: 'Vasco da Gama', logo: 'vasco.png', leagueId: 2),
-
-
-  
   Team(id: 26, name: 'Bournemouth', logo: 'bournemouth.png', leagueId: 3),
   Team(id: 27, name: 'Arsenal', logo: 'arsenal.png', leagueId: 3),
   Team(id: 28, name: 'Aston Villa', logo: 'aston_villa.png', leagueId: 3),
@@ -65,35 +61,65 @@ List<Team> dummyTeams = [
   Team(id: 35, name: 'Leeds United', logo: 'leeds_united.png', leagueId: 3),
   Team(id: 36, name: 'Leicester City', logo: 'leicester_city.png', leagueId: 3),
   Team(id: 37, name: 'Liverpool', logo: 'liverpool.png', leagueId: 3),
-  Team(id: 38, name: 'Manchester City', logo: 'manchester_city.png', leagueId: 3),
-  Team(id: 39, name: 'Manchester Utd', logo: 'manchester_united.png', leagueId: 3),
-  Team(id: 40, name: 'Newcastle Utd', logo: 'newcastle_united.png', leagueId: 3),
-  Team(id: 41, name: "Nott'm Forest", logo: 'nottingham_forest.png', leagueId: 3),
+  Team(
+      id: 38,
+      name: 'Manchester City',
+      logo: 'manchester_city.png',
+      leagueId: 3),
+  Team(
+      id: 39,
+      name: 'Manchester Utd',
+      logo: 'manchester_united.png',
+      leagueId: 3),
+  Team(
+      id: 40, name: 'Newcastle Utd', logo: 'newcastle_united.png', leagueId: 3),
+  Team(
+      id: 41,
+      name: "Nott'm Forest",
+      logo: 'nottingham_forest.png',
+      leagueId: 3),
   Team(id: 42, name: 'Southampton', logo: 'southampton.png', leagueId: 3),
   Team(id: 43, name: 'Tottenham', logo: 'tottenham.png', leagueId: 3),
   Team(id: 44, name: 'West Ham', logo: 'west_ham.png', leagueId: 3),
   Team(id: 45, name: 'Wolves', logo: 'wolves.png', leagueId: 3),
   Team(id: 46, name: 'FC Köln', logo: 'fc_koln.png', leagueId: 4),
   Team(id: 47, name: 'FSV Mainz 05', logo: 'fsv_mainz_05.png', leagueId: 4),
-  Team(id: 48, name: 'Borussia Dortmund', logo: 'borussia_dortmund.png', leagueId: 4),
+  Team(
+      id: 48,
+      name: 'Borussia Dortmund',
+      logo: 'borussia_dortmund.png',
+      leagueId: 4),
   Team(id: 49, name: 'FC Augsburg', logo: 'fc_augsburg.png', leagueId: 4),
-  Team(id: 50, name: 'FC Bayern Munich', logo: 'fc_bayern_munich.png', leagueId: 4),
+  Team(
+      id: 50,
+      name: 'FC Bayern Munich',
+      logo: 'fc_bayern_munich.png',
+      leagueId: 4),
   Team(id: 51, name: 'Schalke 04', logo: 'schalke_04.png', leagueId: 4),
-  Team(id: 52, name: 'Eint. Frankfurt', logo: 'eintracht_frankfurt.png', leagueId: 4),
+  Team(
+      id: 52,
+      name: 'Eintracht Frankfurt',
+      logo: 'eintracht_frankfurt.png',
+      leagueId: 4),
   Team(id: 53, name: 'Hertha Berlin', logo: 'hertha_berlin.png', leagueId: 4),
-  Team(id: 54, name: 'Bayer Leverkusen', logo: 'bayer_leverkusen.png', leagueId: 4),
+  Team(
+      id: 54,
+      name: 'Bayer Leverkusen',
+      logo: 'bayer_leverkusen.png',
+      leagueId: 4),
   Team(id: 55, name: 'M\'gladbach', logo: 'mgladbach.png', leagueId: 4),
   Team(id: 56, name: 'RB Leipzig', logo: 'rb_leipzig.png', leagueId: 4),
   Team(id: 57, name: 'Freiburg', logo: 'freiburg.png', leagueId: 4),
-  Team(id: 58, name: 'SV Werder Bremen', logo: 'sv_werder_bremen.png', leagueId: 4),
+  Team(
+      id: 58,
+      name: 'SV Werder Bremen',
+      logo: 'sv_werder_bremen.png',
+      leagueId: 4),
   Team(id: 59, name: 'Hoffenheim', logo: 'hoffenheim.png', leagueId: 4),
   Team(id: 60, name: 'Union Berlin', logo: 'union_berlin.png', leagueId: 4),
   Team(id: 61, name: 'Stuttgart', logo: 'stuttgart.png', leagueId: 4),
   Team(id: 62, name: 'Bochum', logo: 'bochum.png', leagueId: 4),
   Team(id: 63, name: 'VfL Wolfsburg', logo: 'vfl_wolfsburg.png', leagueId: 4),
-
-
-
   Team(id: 64, name: 'Argentina', logo: 'argentina.png', leagueId: 5),
   Team(id: 65, name: 'Austrália', logo: 'australia.png', leagueId: 5),
   Team(id: 66, name: 'Áustria', logo: 'austria.png', leagueId: 5),
@@ -102,7 +128,11 @@ List<Team> dummyTeams = [
   Team(id: 69, name: 'Canadá', logo: 'canada.png', leagueId: 5),
   Team(id: 70, name: 'China', logo: 'china.png', leagueId: 5),
   Team(id: 71, name: 'Croácia', logo: 'croatia.png', leagueId: 5),
-  Team(id: 72, name: 'República Tcheca', logo: 'czech_republic.png', leagueId: 5),
+  Team(
+      id: 72,
+      name: 'República Tcheca',
+      logo: 'czech_republic.png',
+      leagueId: 5),
   Team(id: 73, name: 'Dinamarca', logo: 'denmark.png', leagueId: 5),
   Team(id: 74, name: 'Inglaterra', logo: 'england.png', leagueId: 5),
   Team(id: 75, name: 'Finlândia', logo: 'finland.png', leagueId: 5),
@@ -117,7 +147,11 @@ List<Team> dummyTeams = [
   Team(id: 84, name: 'Marrocos', logo: 'morocco.png', leagueId: 5),
   Team(id: 85, name: 'Holanda', logo: 'netherlands.png', leagueId: 5),
   Team(id: 86, name: 'Nova Zelândia', logo: 'new_zealand.png', leagueId: 5),
-  Team(id: 87, name: 'Irlanda do Norte', logo: 'northern_ireland.png', leagueId: 5),
+  Team(
+      id: 87,
+      name: 'Irlanda do Norte',
+      logo: 'northern_ireland.png',
+      leagueId: 5),
   Team(id: 88, name: 'Noruega', logo: 'norway.png', leagueId: 5),
   Team(id: 89, name: 'Polônia', logo: 'poland.png', leagueId: 5),
   Team(id: 90, name: 'Portugal', logo: 'portugal.png', leagueId: 5),
@@ -129,16 +163,8 @@ List<Team> dummyTeams = [
   Team(id: 96, name: 'Ucrânia', logo: 'ukraine.png', leagueId: 5),
   Team(id: 97, name: 'Estados Unidos', logo: 'united_states.png', leagueId: 5),
   Team(id: 98, name: 'País de Gales', logo: 'wales.png', leagueId: 5),
-
-
-
-
-
-
   Team(id: 28, name: 'Sydney FC', logo: 'sydney.png', leagueId: 4),
   Team(id: 29, name: 'Melbourne Victory', logo: 'melbourne.png', leagueId: 4),
   Team(id: 30, name: 'Ajax', logo: 'ajax_amsterdam.png', leagueId: 5),
   Team(id: 31, name: 'PSV Eindhoven', logo: 'psv_eindhoven.png', leagueId: 5),
-
-
 ];
